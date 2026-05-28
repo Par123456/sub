@@ -1,0 +1,10 @@
+name = "v2ray-dash-tester"
+main = "worker.js"
+compatibility_date = "2025-12-01"
+
+[vars]
+ENVIRONMENT = "production"
+
+routes = [
+  { pattern = "tester.yourdomain.com/*", zone_name = "yourdomain.com" },
+]
