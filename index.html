@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>V2Ray Dash | پنل مدیریت کانفیگ</title>
+  <meta name="description" content="Dashboard for managing and testing V2Ray configs and subscription links" />
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- ====== HEADER ====== -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div class="logo-text">
+          <h1>V2Ray Dash</h1>
+          <span>مدیریت و تست کانفیگ</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-glass btn-sm" id="themeToggle" title="تغییر تم">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="btn btn-glass btn-sm" id="langToggle" title="English">
+          <i class="fas fa-globe"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== MAIN ====== -->
+  <main class="main">
+
+    <!-- ====== INPUT SECTION ====== -->
+    <section class="section input-section glass">
+      <div class="section-header">
+        <h2><i class="fas fa-link"></i> <span data-i18n="addConfig">افزودن کانفیگ</span></h2>
+        <div class="section-badge" id="configCount">۰ کانفیگ</div>
+      </div>
+
+      <div class="input-tabs">
+        <button class="tab-btn active" data-tab="single">
+          <i class="fas fa-pen"></i> <span data-i18n="singleConfig">تکی</span>
+        </button>
+        <button class="tab-btn" data-tab="bulk">
+          <i class="fas fa-layer-group"></i> <span data-i18n="bulkImport">حجمی</span>
+        </button>
+        <button class="tab-btn" data-tab="subscribe">
+          <i class="fas fa-rss"></i> <span data-i18n="subscribe">سابسکرایب</span>
+        </button>
+      </div>
+
+      <!-- Single Config -->
+      <div class="tab-content active" id="tab-single">
+        <div class="input-group">
+          <div class="input-row">
+            <div class="input-field flex-1">
+              <label for="configName"><i class="fas fa-tag"></i> <span data-i18n="label">برچسب</span></label>
+              <input type="text" id="configName" placeholder="مثال: سرور هلند - ۱" />
+            </div>
+            <div class="input-field flex-1">
+              <label for="configAddress"><i class="fas fa-globe"></i> <span data-i18n="address">آدرس</span></label>
+              <input type="text" id="configAddress" placeholder="example.com یا 1.2.3.4" />
+            </div>
+            <div class="input-field flex-1">
+              <label for="configPort"><i class="fas fa-plug"></i> <span data-i18n="port">پورت</span></label>
+              <input type="number" id="configPort" placeholder="۴۴۳" />
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="input-field flex-2">
+              <label for="configLink"><i class="fas fa-key"></i> <span data-i18n="vmessLink">لینک کانفیگ (vmess/vless/trojan)</span></label>
+              <input type="text" id="configLink" placeholder="vmess://...  یا  vless://...  یا  trojan://..." />
+            </div>
+            <div class="input-field flex-1">
+              <label for="configProtocol"><i class="fas fa-cog"></i> <span data-i18n="protocol">پروتکل</span></label>
+              <select id="configProtocol">
+                <option value="auto">تشخیص خودکار</option>
+                <option value="vmess">VMess</option>
+                <option value="vless">VLESS</option>
+                <option value="trojan">Trojan</option>
+                <option value="shadowsocks">Shadowsocks</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-row options-row">
+            <div class="input-field flex-1">
+              <label><i class="fas fa-shield"></i> <span data-i18n="testMethod">روش تست</span></label>
+              <select id="testMethod">
+                <option value="tcp">TCP Ping</option>
+                <option value="http">HTTP GET</option>
+                <option value="tls">TLS Handshake</option>
+              </select>
+            </div>
+            <div class="input-field flex-1">
+              <label><i class="fas fa-clock"></i> <span data-i18n="timeout">تایم‌اوت (ثانیه)</span></label>
+              <input type="number" id="configTimeout" value="5" min="1" max="30" />
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="addSingleBtn">
+              <i class="fas fa-plus"></i> <span data-i18n="add">افزودن</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Import -->
+      <div class="tab-content" id="tab-bulk">
+        <div class="input-group">
+          <label for="bulkTextarea"><i class="fas fa-paste"></i> <span data-i18n="pasteConfigs">لینک‌های کانفیگ را وارد کنید (هر خط یک لینک)</span></label>
+          <textarea id="bulkTextarea" rows="6" placeholder="vmess://...&#10;vless://...&#10;trojan://..."></textarea>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="bulkImportBtn">
+              <i class="fas fa-upload"></i> <span data-i18n="import">ورود دسته‌جمعی</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscribe -->
+      <div class="tab-content" id="tab-subscribe">
+        <div class="input-group">
+          <div class="input-row">
+            <div class="input-field flex-3">
+              <label for="subUrl"><i class="fas fa-rss"></i> <span data-i18n="subUrl">آدرس سابسکرایب</span></label>
+              <input type="url" id="subUrl" placeholder="https://example.com/subscribe/..." />
+            </div>
+            <div class="input-field flex-1">
+              <label for="subName"><i class="fas fa-tag"></i> <span data-i18n="subName">نام سابسکرایب</span></label>
+              <input type="text" id="subName" placeholder="سرویس من" />
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="subFetchBtn">
+              <i class="fas fa-download"></i> <span data-i18n="fetch">دریافت کانفیگ‌ها</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== SUBSCRIPTIONS LIST ====== -->
+    <section class="section glass" id="subsSection" style="display:none;">
+      <div class="section-header">
+        <h2><i class="fas fa-rss"></i> <span data-i18n="subscriptions">سابسکرایب‌ها</span></h2>
+      </div>
+      <div class="subs-list" id="subsList"></div>
+    </section>
+
+    <!-- ====== CONFIGS TABLE ====== -->
+    <section class="section glass configs-section">
+      <div class="section-header">
+        <h2><i class="fas fa-server"></i> <span data-i18n="configs">کانفیگ‌ها</span></h2>
+        <div class="section-actions">
+          <button class="btn btn-glass btn-sm" id="testAllBtn" title="تست همه">
+            <i class="fas fa-play"></i> <span data-i18n="testAll">تست همه</span>
+          </button>
+          <button class="btn btn-glass btn-sm btn-danger" id="clearAllBtn" title="حذف همه">
+            <i class="fas fa-trash"></i>
+          </button>
+          <button class="btn btn-glass btn-sm" id="exportBtn" title="خروجی JSON">
+            <i class="fas fa-download"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="configs-table" id="configsTable">
+          <thead>
+            <tr>
+              <th class="col-status"><span data-i18n="status">وضعیت</span></th>
+              <th class="col-name"><span data-i18n="labelCol">برچسب</span></th>
+              <th class="col-addr"><span data-i18n="addressCol">آدرس</span></th>
+              <th class="col-port"><span data-i18n="portCol">پورت</span></th>
+              <th class="col-proto"><span data-i18n="protocolCol">پروتکل</span></th>
+              <th class="col-ping"><span data-i18n="ping">پینگ</span></th>
+              <th class="col-uptime"><span data-i18n="uptime">آپتایم</span></th>
+              <th class="col-actions"><span data-i18n="actions">عملیات</span></th>
+            </tr>
+          </thead>
+          <tbody id="configsBody">
+            <!-- Config rows rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon"><i class="fas fa-server"></i></div>
+        <h3 data-i18n="noConfigs">هنوز کانفیگی اضافه نکردید!</h3>
+        <p data-i18n="noConfigsHint">از بخش بالا لینک‌های کانفیگ خود را اضافه کنید</p>
+      </div>
+    </section>
+
+    <!-- ====== STATS BAR ====== -->
+    <section class="stats-bar glass">
+      <div class="stat-item">
+        <div class="stat-value" id="statTotal">۰</div>
+        <div class="stat-label" data-i18n="total">کل</div>
+      </div>
+      <div class="stat-item success">
+        <div class="stat-value" id="statOnline">۰</div>
+        <div class="stat-label" data-i18n="online">آنلاین</div>
+      </div>
+      <div class="stat-item danger">
+        <div class="stat-value" id="statOffline">۰</div>
+        <div class="stat-label" data-i18n="offline">آفلاین</div>
+      </div>
+      <div class="stat-item warning">
+        <div class="stat-value" id="statUntested">۰</div>
+        <div class="stat-label" data-i18n="untested">تست نشده</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="statAvgPing">—</div>
+        <div class="stat-label" data-i18n="avgPing">میانگین پینگ</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====== TOAST CONTAINER ====== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ====== SCRIPTS ====== -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/tester.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
